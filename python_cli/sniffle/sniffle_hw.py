@@ -125,9 +125,27 @@ class SniffleHW:
         self.cmd_marker(b'@') # command sync
 
     def _send_cmd(self, cmd_byte_list):
+        print("cmd_byte_list: ",cmd_byte_list," type: ", type(cmd_byte_list))
+        for byte in cmd_byte_list:
+            print(f"{byte:02x}", end=" ")
+        print("\n")
+
         b0 = (len(cmd_byte_list) + 3) // 3
+        print("b0: ",b0," type: ", type(b0))
+        print("\n")
+
         cmd = bytes([b0, *cmd_byte_list])
+        print("cmd: ",cmd," type: ", type(cmd))
+        for byte in cmd_byte_list:
+            print(f"{byte:02x}", end=" ")
+        print("\n")
+
         msg = b64encode(cmd) + b'\r\n'
+        print("msg: ",msg," type: ", type(msg))
+        for byte in cmd_byte_list:
+            print(f"{byte:02x}", end=" ")
+        print("\n")
+
         self.ser.write(msg)
 
     # Passively listen on specified channel and PHY for PDUs with specified access address
@@ -222,8 +240,19 @@ class SniffleHW:
             raise ValueError("scanRspData too long!")
         if not (mode in (0, 2, 3)):
             raise ValueError("Mode must be 0 (connectable), 2 (non-connectable), or 3 (scannable)")
+        
         paddedAdvData = [len(advData), *advData] + [0]*(31 - len(advData))
+        print("paddedAdvData: ",paddedAdvData," type: ", type(paddedAdvData))
+        for i in paddedAdvData:
+            print(f"{i:02x}", end=" ")
+        print("\n")
+
         paddedScnData = [len(scanRspData), *scanRspData] + [0]*(31 - len(scanRspData))
+        print("paddedScnData: ",paddedScnData, " type: ", type(paddedScnData))
+        for i in paddedScnData:
+            print(f"{i:02x}", end=" ")
+        print("\n")
+
         self._send_cmd([0x1C, mode, *paddedAdvData, *paddedScnData])
 
     # Set how frequently advertising events should occur

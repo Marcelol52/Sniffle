@@ -53,21 +53,33 @@ def main():
     hw.mark_and_flush()
 
     # advertising and scan response data
+    print("\n")
     advData = bytes([
         0x02, 0x01, 0x1A, 0x02, 0x0A, 0x0C, 0x11, 0x07,
         0x64, 0x14, 0xEA, 0xD7, 0x2F, 0xDB, 0xA3, 0xB0,
         0x59, 0x48, 0x16, 0xD4, 0x30, 0x82, 0xCB, 0x27,
         0x05, 0x03, 0x0A, 0x18, 0x0D, 0x18])
+        
+    print("advData: ",advData, " type: ", type(advData))
+    for byte in advData:
+        print(f"{byte:02x}", end=" ")
+    print("\n")
+
     devName = b'NCC Goat'
     scanRspData = bytes([len(devName) + 1, 0x09]) + devName
+
+    print("scanRspData: ",scanRspData," type: ", type(scanRspData))
+    for byte in scanRspData:
+        print(f"{byte:02x}", end=" ")
+    print("\n")
 
     # now enter advertiser mode
     hw.cmd_advertise(advData, scanRspData)
 
     while True:
         msg = hw.recv_and_decode()
-        if msg is not None:
-            print(msg, end='\n\n')
+    #if msg is not None:
+    #print(msg, end='\n\n')
 
 if __name__ == "__main__":
     main()
