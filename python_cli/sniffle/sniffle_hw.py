@@ -142,7 +142,7 @@ class SniffleHW:
 
         msg = b64encode(cmd) + b'\r\n'
         print("msg: ",msg," type: ", type(msg))
-        for byte in cmd_byte_list:
+        for byte in msg:
             print(f"{byte:02x}", end=" ")
         print("\n")
 
